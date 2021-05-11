@@ -1,7 +1,8 @@
 # rg-jvh-tf-state
 # stjvhtfstate
 # scjvhtfstate
-# infra.tfstate
+# infra.tfstate     -backend-config="address=demo.consul.io" \
+
 
 # Init the state
 # TF apply
@@ -12,10 +13,14 @@ pool:
 stages:
   - stage: Build
     jobs:
-    - job: BuildJob
+    - job: tf_install
       steps:
       - task: Bash@3
         inputs:
           targetType: 'inline'
           script: |
-            echo 'Hello world'
+            sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+            curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+            sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+            sudo apt-get update && sudo apt-get install terraform
+
