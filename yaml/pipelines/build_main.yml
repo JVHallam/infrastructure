@@ -24,3 +24,13 @@ stages:
             sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
             sudo apt-get update && sudo apt-get install terraform
 
+      - task: AzurePowerShell@5
+        inputs:
+          azureSubscription: 'Basic(060bb414-ecdc-4591-8fa3-60a9338e9911)'
+          ScriptType: 'InlineScript'
+          Inline: |
+            echo "Hello World!"
+            
+            tf init
+          azurePowerShellVersion: 'LatestVersion'
+          pwsh: true
