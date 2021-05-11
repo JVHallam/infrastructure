@@ -1,3 +1,6 @@
+pool:
+  name: pipe
+
 stages:
 - stage: Build
   jobs:
