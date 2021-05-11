@@ -10,3 +10,4 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'Write-Host "Hello World"'
+        pwsh: true
