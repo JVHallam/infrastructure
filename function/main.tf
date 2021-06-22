@@ -1,20 +1,21 @@
 terraform {
-    backend "azurerm"{
-        resource_group_name = "rg-jvh-tf-state"
-        storage_account_name = "stjvhtfstate"
-        container_name = "scjvhtfstate"
-        key = "infra.tfstate"
-    }
-}
-provider "azurerm"{
-    features{}
+  backend "azurerm" {
+    resource_group_name  = "rg-jvh-tf-state"
+    storage_account_name = "stjvhtfstate"
+    container_name       = "scjvhtfstate"
+    key                  = "infra.tfstate"
+  }
 }
 
-module "naming"{
-    source = "github.com/azure/terraform-azurerm-naming"
-    suffix = [ "jvh", "fn" ]
+provider "azurerm" {
+  features {}
 }
-    
+
+module "naming" {
+  source = "github.com/azure/terraform-azurerm-naming"
+  suffix = ["jvh", "fn"]
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = module.naming.resource_group.name_unique
   location = "UK South"
@@ -39,6 +40,13 @@ resource "azurerm_app_service_plan" "sp" {
   }
 }
 
+resource "azurerm_application_insights" "api" {
+  name                = module.naming.application_insights.name_unique
+  location            = "UK South"
+  resource_group_name = azurerm_resource_group.rg.name
+  application_type    = "web"
+}
+
 resource "azurerm_function_app" "example" {
   name                       = module.naming.function_app.name_unique
   location                   = azurerm_resource_group.rg.location
@@ -47,4 +55,9 @@ resource "azurerm_function_app" "example" {
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
   version                    = "~3"
+
+  app_settings = {
+    APPINSIGHTS_INSTRUMENTATIONKEY         = azurerm_application_insights.api.instrumentation_key
+    APPLICATION_INSIGHTS_CONNECTION_STRING = azurerm_application_insights.api.connection_string
+  }
 }
