@@ -47,7 +47,7 @@ resource "azurerm_application_insights" "api" {
   application_type    = "web"
 }
 
-resource "azurerm_function_app" "example" {
+resource "azurerm_function_app" "fn" {
   name                       = module.naming.function_app.name_unique
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
@@ -60,4 +60,8 @@ resource "azurerm_function_app" "example" {
     APPINSIGHTS_INSTRUMENTATIONKEY         = azurerm_application_insights.api.instrumentation_key
     APPLICATION_INSIGHTS_CONNECTION_STRING = azurerm_application_insights.api.connection_string
   }
+}
+
+outputs "function_app_name"{
+    value = azurerm_function_app.fn.name
 }
