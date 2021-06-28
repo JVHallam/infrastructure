@@ -62,6 +62,6 @@ resource "azurerm_function_app" "fn" {
   }
 }
 
-outputs "function_app_name"{
+output "function_app_name"{
     value = azurerm_function_app.fn.name
 }
