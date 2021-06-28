@@ -30,3 +30,11 @@ resource "azurerm_servicebus_queue" "queue" {
   namespace_name      = azurerm_servicebus_namespace.queue.name
   enable_partitioning = true
 }
+
+output "queue_name"{
+    value = azurerm_servicebus_queue.queue.name
+}
+
+output "namespace_connection_string"{
+    value = azurerm_servicebus_namespace.queue.name
+}
