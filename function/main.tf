@@ -60,5 +60,10 @@ resource "azurerm_function_app" "fn" {
   app_settings = merge({
     APPINSIGHTS_INSTRUMENTATIONKEY         = azurerm_application_insights.api.instrumentation_key
     APPLICATION_INSIGHTS_CONNECTION_STRING = azurerm_application_insights.api.connection_string
+    "WEBSITE_RUN_FROM_PACKAGE"             = 1
   }, var.app_settings)
+
+  lifecycle = {
+    ignore_changes = [ app_settings["WEBSITE_RUN_FROM_PACKAGE"] ]
+  }
 }
